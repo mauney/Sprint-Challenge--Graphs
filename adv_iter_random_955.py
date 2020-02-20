@@ -24,7 +24,7 @@ world.load_graph(room_graph)
 # Print an ASCII map
 # world.print_rooms()
 
-# player = Player(world.starting_room)
+player = Player(world.starting_room)
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
@@ -124,67 +124,27 @@ def explore_world(player, traversal_path):
                 player.travel(direction)
                 traversal_path.append(direction)
 
-    return graph
+    return graph    
 
 
-def traversal_test(traversal_path, seed, best_score):
-    # Create new player and clear traversal_path
-    player = Player(world.starting_room)
-    traversal_path = []
-    # print(f'traversal check: {traversal_path}')
-
-    explore_world(player, traversal_path)
-
-    visited_rooms = set()
-    player.current_room = world.starting_room
-    visited_rooms.add(player.current_room)
-
-    for move in traversal_path:
-        player.travel(move)
-        visited_rooms.add(player.current_room)
-
-    if len(visited_rooms) == len(room_graph):
-        if len(traversal_path) < best_score['best']:
-            best_score['best'] = len(traversal_path)
-            print(f'seed: {seed}')
-            # print(f'traversal: {traversal_path}')
-            print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
-            print('----------------------------')
-    else:
-        print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-        print(f'seed: {seed}')
-        # print(f'traversal: {traversal_path}')
-        print(f"{len(traversal_path)} moves, {len(room_graph) - len(visited_rooms)} unvisited rooms")
-        print('----------------------------')
-
-    
-
-best_score = {'best': 964}
-for i in range(20000, 30000):
-    random.seed(i)
-    traversal_test(traversal_path, i, best_score)
-
-# explore_world(player, traversal_path) 
-
-# model = explore_world(player, traversal_path)
-# print(f'traversal_path: {traversal_path}')
-# print(f'model: {model}')
+random.seed(20631)
+explore_world(player, traversal_path) 
 
 
 # TRAVERSAL TEST
-# visited_rooms = set()
-# player.current_room = world.starting_room
-# visited_rooms.add(player.current_room)
+visited_rooms = set()
+player.current_room = world.starting_room
+visited_rooms.add(player.current_room)
 
-# for move in traversal_path:
-#     player.travel(move)
-#     visited_rooms.add(player.current_room)
+for move in traversal_path:
+    player.travel(move)
+    visited_rooms.add(player.current_room)
 
-# if len(visited_rooms) == len(room_graph):
-#     print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
-# else:
-#     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-#     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+if len(visited_rooms) == len(room_graph):
+    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+else:
+    print("TESTS FAILED: INCOMPLETE TRAVERSAL")
+    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
 
 
 
