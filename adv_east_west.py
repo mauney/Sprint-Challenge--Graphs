@@ -21,7 +21,7 @@ room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
-# world.print_rooms()
+world.print_rooms()
 
 player = Player(world.starting_room)
 
@@ -74,18 +74,39 @@ def find_unexplored(room, graph):
     return None
 
 
+def pre_walk_north_and_south(player, graph, traversal_path):
+    steps = ['n', 's', 's', 'w', 'e', 'n']
+    reverse = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
+    for step in steps:
+        prev_room = player.current_room
+        player.travel(step)
+        traversal_path.append(step)
+        # if new room, add to graph and initialize exits
+        if player.current_room.id not in graph:
+            graph[player.current_room.id] = {}
+            for exits in player.current_room.get_exits():
+                graph[player.current_room.id][exits] = '?'
+        # if entered from unexplored direction, make connections between room and previous room
+        if graph[player.current_room.id][reverse[step]] == '?':
+            graph[player.current_room.id][reverse[step]] = prev_room.id
+            graph[prev_room.id][step] = player.current_room.id
+
+
 def explore_world(player, traversal_path):
     reverse = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
     # add first room to graph and initialize exits
     graph = {player.current_room.id: {}}
     for exits in player.current_room.get_exits():
         graph[player.current_room.id][exits] = '?'
+
+    pre_walk_north_and_south(player, graph, traversal_path)
+
     # enter a room in an unexplored direction
     direction = pick_unexplored(graph[player.current_room.id])
     if direction is None:
         print("Help, I am trapped in a room with no exits!")
         return -1
-    
+
     prev_room = player.current_room
     player.travel(direction)
     traversal_path.append(direction)
