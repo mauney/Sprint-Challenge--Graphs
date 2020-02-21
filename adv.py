@@ -5,6 +5,7 @@ from world import World
 import random
 from ast import literal_eval
 
+
 # Load world
 world = World()
 
@@ -32,7 +33,9 @@ traversal_path = []
 
 def pick_unexplored(room):
     """Using a fixed order, return a room's first unexplored direction"""
-    for direction in ['n', 'e', 's', 'w']:
+    directions_sequence = ['n', 's', 'e', 'w']
+    random.shuffle(directions_sequence)
+    for direction in directions_sequence:
         explored = room.get(direction)
         if explored == '?':
             return direction
@@ -121,12 +124,11 @@ def explore_world(player, traversal_path):
                 player.travel(direction)
                 traversal_path.append(direction)
 
-    return graph
- 
+    return graph    
 
-model = explore_world(player, traversal_path)
-# print(f'traversal_path: {traversal_path}')
-# print(f'model: {model}')
+
+random.seed(20631)
+explore_world(player, traversal_path) 
 
 
 # TRAVERSAL TEST
