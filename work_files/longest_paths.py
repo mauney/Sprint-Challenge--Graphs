@@ -13,15 +13,15 @@ world = World()
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+# map_file = "maps/test_loop_fork.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
-world.print_rooms()
+# world.print_rooms()
 
 player = Player(world.starting_room)
 
@@ -31,14 +31,13 @@ traversal_path = []
 
 # make a list of all the terminals
 # map the shortest path to each
-print(world.room_grid)
-terminals = [room.id for room in [row for row in world.room_grid] if room and len(room.get_exits()) == 1]
-print(terminals)
-# print(f'room exits: ')
+terminals = []
 for row in world.room_grid:
     for room in row:
         if room and len(room.get_exits()) == 1:
-            print(room.id)
+            terminals.append(room.id)
+print(terminals)
+print(f'number of terminals: {len(terminals)}')
 
 
 ## Maybe try this afterwards ##
